@@ -30,6 +30,7 @@ export interface CardFormData {
   currentBalance: string;
   statementClosingDate: string;
   paymentDueDate: string;
+  includeInGlobalBalance: boolean;
 }
 
 const INITIAL_FORM: CardFormData = {
@@ -43,6 +44,7 @@ const INITIAL_FORM: CardFormData = {
   currentBalance: "",
   statementClosingDate: "",
   paymentDueDate: "",
+  includeInGlobalBalance: true,
 };
 
 export default function AddCardModal({
@@ -64,7 +66,7 @@ export default function AddCardModal({
     : null;
   const isCreditCard = form.type === "credit";
 
-  function handleChange(field: keyof CardFormData, value: string) {
+  function handleChange(field: keyof CardFormData, value: string | boolean) {
     setForm((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: "" }));
   }
@@ -194,6 +196,31 @@ export default function AddCardModal({
           {errors.lastFourDigits && (
             <div className="form-error">{errors.lastFourDigits}</div>
           )}
+        </div>
+      </div>
+
+      <div className="form-group">
+        <label
+          className="form-label"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            cursor: "pointer",
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={form.includeInGlobalBalance}
+            onChange={(e) =>
+              handleChange("includeInGlobalBalance", e.target.checked)
+            }
+            style={{ width: "16px", height: "16px", cursor: "pointer" }}
+          />
+          Include in global balance
+        </label>
+        <div className="form-hint">
+          When enabled, this card's balance affects your total balance
         </div>
       </div>
 

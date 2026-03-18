@@ -30,6 +30,7 @@ interface EditCardForm {
   creditLimit: string;
   statementClosingDate: string;
   paymentDueDate: string;
+  includeInGlobalBalance: boolean;
 }
 
 export default function EditCardModal({
@@ -59,7 +60,7 @@ export default function EditCardModal({
     : null;
   const isCreditCard = form.type === "credit";
 
-  function handleChange(field: keyof EditCardForm, value: string) {
+  function handleChange(field: keyof EditCardForm, value: string | boolean) {
     setForm((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: "" }));
   }
@@ -105,6 +106,7 @@ export default function EditCardModal({
         : undefined,
       statementClosingDate: form.statementClosingDate || undefined,
       paymentDueDate: form.paymentDueDate || undefined,
+      includeInGlobalBalance: form.includeInGlobalBalance,
     };
 
     onSave(updated);
@@ -191,6 +193,31 @@ export default function EditCardModal({
           {errors.lastFourDigits && (
             <div className="form-error">{errors.lastFourDigits}</div>
           )}
+        </div>
+      </div>
+
+      <div className="form-group">
+        <label
+          className="form-label"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            cursor: "pointer",
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={form.includeInGlobalBalance}
+            onChange={(e) =>
+              handleChange("includeInGlobalBalance", e.target.checked)
+            }
+            style={{ width: "16px", height: "16px", cursor: "pointer" }}
+          />
+          Include in global balance
+        </label>
+        <div className="form-hint">
+          When enabled, this card's balance affects your total balance
         </div>
       </div>
 
@@ -288,6 +315,7 @@ function getInitialForm(card: Card | null): EditCardForm {
       creditLimit: "",
       statementClosingDate: "",
       paymentDueDate: "",
+      includeInGlobalBalance: true,
     };
   }
 
@@ -308,5 +336,6 @@ function getInitialForm(card: Card | null): EditCardForm {
     creditLimit: card.creditLimit ? (card.creditLimit / 100).toFixed(2) : "",
     statementClosingDate: card.statementClosingDate || "",
     paymentDueDate: card.paymentDueDate || "",
+    includeInGlobalBalance: card.includeInGlobalBalance,
   };
 }

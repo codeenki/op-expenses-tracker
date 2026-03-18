@@ -267,6 +267,13 @@
   background: var(--color-danger-light);
 }
 
+.cardRow-tagExcluded {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-warning-light);
+  color: var(--color-warning);
+}
 /* ---------- Responsive ---------- */
 
 @media (max-width: 768px) {

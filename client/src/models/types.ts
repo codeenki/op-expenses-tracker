@@ -18,7 +18,7 @@ export interface User {
 export interface Account {
   id: string;
   name: string;
-  bankInstitution: string;
+  bankInstitution: string; // empty for cash accounts
   country: string;
   currency: string;
   type: AccountType;
@@ -28,9 +28,17 @@ export interface Account {
   tags: string[];
   visibility: Visibility;
   status: EntityStatus;
+  /* Cash-specific fields */
+  location?: string; // e.g. "Wallet", "Home safe"
+  includeInGlobalBalance: boolean;
 }
 
-export type AccountType = "checking" | "savings" | "investment" | "enterprise";
+export type AccountType =
+  | "checking"
+  | "savings"
+  | "investment"
+  | "enterprise"
+  | "cash";
 
 export type Visibility = "private" | "shared" | "public";
 
@@ -51,6 +59,7 @@ export interface Card {
   currentBalance: number;
   statementClosingDate?: string;
   paymentDueDate?: string;
+  includeInGlobalBalance: boolean;
 }
 
 export type CardType = "credit" | "debit";
@@ -61,11 +70,11 @@ export type CardNetwork = "visa" | "mastercard" | "amex" | "other";
 
 export interface Transaction {
   id: string;
-  title: string; // short name, required (shown in lists)
-  description?: string; // optional longer notes
-  amount: number; // in cents, always positive
+  title: string;
+  description?: string;
+  amount: number;
   currency: string;
-  date: string; // ISO string
+  date: string;
   sourceType: TransactionSource;
   sourceId?: string;
   sourceName: string;
@@ -76,7 +85,7 @@ export interface Transaction {
   notes?: string;
   transferToId?: string;
   transferToName?: string;
-  attachmentUrl?: string; // future: receipt photo or bill PDF
+  attachmentUrl?: string;
 }
 
 export type TransactionType = "expense" | "income" | "transfer";

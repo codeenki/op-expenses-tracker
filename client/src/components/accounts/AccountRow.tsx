@@ -1,7 +1,8 @@
 /* ============================================
    ACCOUNT ROW COMPONENT
-   Expandable row showing account summary when
-   collapsed and full details when expanded.
+   Expandable row showing account summary.
+   Handles both bank accounts and cash accounts
+   with appropriate display for each.
    ============================================ */
 
 import { useState } from "react";
@@ -23,6 +24,7 @@ export default function AccountRow({
 }: AccountRowProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const isCash = account.type === "cash";
   const typeLabel =
     ACCOUNT_TYPE_OPTIONS.find((t) => t.value === account.type)?.label ||
     account.type;
@@ -35,7 +37,7 @@ export default function AccountRow({
       >
         <div className="accountRow-left">
           <div className="accountRow-icon">
-            <AccountIcon />
+            {isCash ? <CashIcon /> : <AccountIcon />}
           </div>
           <div>
             <div className="accountRow-name">{account.name}</div>
@@ -49,6 +51,17 @@ export default function AccountRow({
               <span>
                 {typeLabel} · {account.currency}
               </span>
+              {isCash && account.location && (
+                <>
+                  <span className="accountRow-separator">·</span>
+                  <span>{account.location}</span>
+                </>
+              )}
+              {!account.includeInGlobalBalance && (
+                <span className="accountRow-excludedBadge">
+                  Excluded from balance
+                </span>
+              )}
               {account.tags.map((tag) => (
                 <span key={tag} className="accountRow-tag">
                   {tag}
@@ -73,32 +86,60 @@ export default function AccountRow({
       {isExpanded && (
         <div className="accountRow-details">
           <div className="accountRow-detailsGrid">
-            <DetailItem
-              label="Bank institution"
-              value={account.bankInstitution}
-            />
-            <DetailItem label="Country" value={account.country} />
-            <DetailItem
-              label="Initial balance"
-              value={formatCurrency(account.initialBalance, account.currency)}
-            />
-            <DetailItem
-              label="Interest rate"
-              value={
-                account.interestRate ? `${account.interestRate}% annual` : "—"
-              }
-            />
-            <DetailItem
-              label="Visibility"
-              value={
-                account.visibility.charAt(0).toUpperCase() +
-                account.visibility.slice(1)
-              }
-            />
-            <DetailItem
-              label="Tags"
-              value={account.tags.length > 0 ? account.tags.join(", ") : "—"}
-            />
+            {isCash ? (
+              <>
+                <DetailItem label="Location" value={account.location || "—"} />
+                <DetailItem label="Currency" value={account.currency} />
+                <DetailItem
+                  label="Balance"
+                  value={formatCurrency(account.balance, account.currency)}
+                />
+                <DetailItem
+                  label="In global balance"
+                  value={account.includeInGlobalBalance ? "Yes" : "No"}
+                />
+              </>
+            ) : (
+              <>
+                <DetailItem
+                  label="Bank institution"
+                  value={account.bankInstitution}
+                />
+                <DetailItem label="Country" value={account.country} />
+                <DetailItem
+                  label="Initial balance"
+                  value={formatCurrency(
+                    account.initialBalance,
+                    account.currency,
+                  )}
+                />
+                <DetailItem
+                  label="Interest rate"
+                  value={
+                    account.interestRate
+                      ? `${account.interestRate}% annual`
+                      : "—"
+                  }
+                />
+                <DetailItem
+                  label="Visibility"
+                  value={
+                    account.visibility.charAt(0).toUpperCase() +
+                    account.visibility.slice(1)
+                  }
+                />
+                <DetailItem
+                  label="In global balance"
+                  value={account.includeInGlobalBalance ? "Yes" : "No"}
+                />
+                <DetailItem
+                  label="Tags"
+                  value={
+                    account.tags.length > 0 ? account.tags.join(", ") : "—"
+                  }
+                />
+              </>
+            )}
           </div>
           <div className="accountRow-actions">
             <button
@@ -154,6 +195,25 @@ function AccountIcon() {
         strokeWidth="1.2"
         strokeLinecap="round"
       />
+    </svg>
+  );
+}
+
+function CashIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <rect
+        x="1"
+        y="3"
+        width="14"
+        height="10"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="1.2"
+      />
+      <circle cx="8" cy="8" r="2.5" stroke="currentColor" strokeWidth="1.2" />
+      <circle cx="3.5" cy="8" r="0.8" fill="currentColor" />
+      <circle cx="12.5" cy="8" r="0.8" fill="currentColor" />
     </svg>
   );
 }

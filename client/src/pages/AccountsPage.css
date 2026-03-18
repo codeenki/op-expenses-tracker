@@ -48,6 +48,19 @@
   margin-bottom: var(--space-lg);
 }
 
+.accountsPage-section {
+  margin-bottom: var(--space-lg);
+}
+
+.accountsPage-sectionTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-md);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 768px) {

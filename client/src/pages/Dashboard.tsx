@@ -1,13 +1,10 @@
 /* ============================================
    DASHBOARD PAGE
-   Main overview page composing stat cards,
-   recent transactions, spending chart, accounts,
-   and upcoming payments.
-
-   Currently uses mock data. Will connect to
-   the API in Phase 3.
+   Main overview page. Cash on hand now
+   calculates from cash-type accounts.
    ============================================ */
 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../constants/routes";
 import {
@@ -15,6 +12,7 @@ import {
   type Account,
   type RecurringPayment,
   type CategorySummary,
+  type Card,
 } from "../models/types";
 import { formatCurrency } from "../utils/formatters";
 import { DASHBOARD_RECENT_EXPENSES_COUNT } from "../constants/categories";
@@ -24,6 +22,9 @@ import RecentExpenses from "../components/dashboard/RecentExpenses";
 import SpendingChart from "../components/dashboard/SpendingChart";
 import AccountsOverview from "../components/dashboard/AccountsOverview";
 import UpcomingPayments from "../components/dashboard/UpcomingPayments";
+import QuickAddModal, {
+  type QuickAddData,
+} from "../components/transactions/QuickAddModal";
 import "./Dashboard.css";
 
 /* ---------- Mock Data ---------- */
@@ -51,7 +52,8 @@ const MOCK_TRANSACTIONS: Transaction[] = [
     currency: "USD",
     date: "2026-03-18T08:10:00",
     sourceType: "cash",
-    sourceName: "Cash",
+    sourceId: "cash-1",
+    sourceName: "Wallet",
     type: "expense",
     category: "transport",
     tags: [],
@@ -92,7 +94,8 @@ const MOCK_TRANSACTIONS: Transaction[] = [
     currency: "USD",
     date: "2026-03-14T07:45:00",
     sourceType: "cash",
-    sourceName: "Cash",
+    sourceId: "cash-1",
+    sourceName: "Wallet",
     type: "expense",
     category: "food",
     tags: [],
@@ -113,6 +116,7 @@ const MOCK_ACCOUNTS: Account[] = [
     tags: ["Primary"],
     visibility: "private",
     status: "active",
+    includeInGlobalBalance: true,
   },
   {
     id: "2",
@@ -127,19 +131,22 @@ const MOCK_ACCOUNTS: Account[] = [
     tags: [],
     visibility: "private",
     status: "active",
+    includeInGlobalBalance: true,
   },
   {
-    id: "3",
-    name: "Visa Gold",
-    bankInstitution: "BAC",
-    country: "Costa Rica",
+    id: "cash-1",
+    name: "Wallet",
+    bankInstitution: "",
+    country: "",
     currency: "USD",
-    type: "checking",
-    initialBalance: 0,
-    balance: -83050,
+    type: "cash",
+    initialBalance: 34000,
+    balance: 34000,
     tags: [],
     visibility: "private",
     status: "active",
+    location: "Wallet",
+    includeInGlobalBalance: true,
   },
 ];
 
@@ -181,41 +188,92 @@ const MOCK_SPENDING: CategorySummary[] = [
 /* ---------- Computed values ---------- */
 
 function calculateGlobalBalance(accounts: Account[]): number {
-  return accounts.reduce((sum, acc) => sum + acc.balance, 0);
-}
-
-function calculateCreditDebt(accounts: Account[]): number {
   return accounts
-    .filter((acc) => acc.balance < 0)
-    .reduce((sum, acc) => sum + Math.abs(acc.balance), 0);
+    .filter((a) => a.status === "active" && a.includeInGlobalBalance)
+    .reduce((sum, acc) => sum + acc.balance, 0);
 }
 
-function getCreditCardCount(accounts: Account[]): number {
-  return accounts.filter((acc) => acc.balance < 0).length;
+function calculateCreditDebt(accounts: Card[]): number {
+  return accounts
+    .filter(
+      (acc) =>
+        acc.type === "credit" &&
+        acc.status === "active" &&
+        acc.includeInGlobalBalance,
+    )
+    .reduce((sum, acc) => sum + Math.abs(acc.currentBalance), 0);
 }
 
-function getCashBalance(): number {
-  /* Cash balance would come from a dedicated cash entity in the future */
-  return 34000;
+function getCreditCardCount(accounts: Card[]): number {
+  return accounts.filter(
+    (acc) => acc.currentBalance < 0 && acc.status === "active",
+  ).length;
+}
+
+function calculateCashBalance(accounts: Account[]): number {
+  return accounts
+    .filter(
+      (a) =>
+        a.type === "cash" && a.status === "active" && a.includeInGlobalBalance,
+    )
+    .reduce((sum, a) => sum + a.balance, 0);
 }
 
 /* ---------- Component ---------- */
 
 export default function Dashboard() {
+  const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
   const navigate = useNavigate();
-
+  const MOCK_CARDS_FOR_MODAL: Card[] = [
+    {
+      id: "1",
+      name: "Visa Gold",
+      type: "credit",
+      network: "visa",
+      bank: "BAC",
+      lastFourDigits: "4521",
+      associatedAccountId: "1",
+      status: "active",
+      creditLimit: 500000,
+      currentBalance: -83050,
+      statementClosingDate: "2026-03-20",
+      paymentDueDate: "2026-03-25",
+      includeInGlobalBalance: true,
+    },
+    {
+      id: "2",
+      name: "Mastercard Platinum",
+      type: "credit",
+      network: "mastercard",
+      bank: "BCR",
+      lastFourDigits: "8832",
+      status: "active",
+      creditLimit: 300000,
+      currentBalance: -40000,
+      statementClosingDate: "2026-04-05",
+      paymentDueDate: "2026-04-15",
+      includeInGlobalBalance: false,
+    },
+  ];
   const globalBalance = calculateGlobalBalance(MOCK_ACCOUNTS);
-  const creditDebt = calculateCreditDebt(MOCK_ACCOUNTS);
-  const creditCardCount = getCreditCardCount(MOCK_ACCOUNTS);
-  const cashBalance = getCashBalance();
+  const creditDebt = calculateCreditDebt(MOCK_CARDS_FOR_MODAL);
+  const creditCardCount = getCreditCardCount(MOCK_CARDS_FOR_MODAL);
+  const cashBalance = calculateCashBalance(MOCK_ACCOUNTS);
+  const cashAccountCount = MOCK_ACCOUNTS.filter(
+    (a) => a.type === "cash" && a.status === "active",
+  ).length;
 
   const recentTransactions = MOCK_TRANSACTIONS.filter(
     (t) => t.type === "expense",
   ).slice(0, DASHBOARD_RECENT_EXPENSES_COUNT);
 
   function handleQuickExpense() {
-    /* TODO: Open quick expense modal */
-    console.log("Open quick expense modal");
+    setIsQuickAddOpen(true);
+  }
+
+  function handleQuickAdd(data: QuickAddData) {
+    console.log("Quick add from dashboard:", data);
+    // TODO: Will connect to shared state/API in Phase 3
   }
 
   function handleNavigateTransactions() {
@@ -232,7 +290,6 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-      {/* Header */}
       <div className="dashboard-header">
         <h2 className="dashboard-greeting">Welcome back, Luis</h2>
         <div className="dashboard-actions">
@@ -249,7 +306,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Stat cards */}
       <div className="dashboard-stats">
         <StatCard
           label="Global balance"
@@ -275,15 +331,14 @@ export default function Dashboard() {
           label="Cash on hand"
           value={formatCurrency(cashBalance)}
           subtitle={
-            cashBalance > 0
-              ? "Updated today"
-              : "Set your cash balance in settings"
+            cashAccountCount > 0
+              ? `${cashAccountCount} cash account${cashAccountCount > 1 ? "s" : ""}`
+              : "Add a cash account to track"
           }
           subtitleType="neutral"
         />
       </div>
 
-      {/* Middle row: transactions + chart */}
       <div className="dashboard-gridMain">
         <DashboardCard
           title="Recent expenses"
@@ -301,7 +356,6 @@ export default function Dashboard() {
         </DashboardCard>
       </div>
 
-      {/* Bottom row: accounts + payments */}
       <div className="dashboard-gridBottom">
         <DashboardCard
           title="Accounts"
@@ -324,6 +378,14 @@ export default function Dashboard() {
             onAddPayment={handleNavigateIncome}
           />
         </DashboardCard>
+
+        <QuickAddModal
+          isOpen={isQuickAddOpen}
+          accounts={MOCK_ACCOUNTS}
+          cards={MOCK_CARDS_FOR_MODAL}
+          onClose={() => setIsQuickAddOpen(false)}
+          onSubmit={handleQuickAdd}
+        />
       </div>
     </div>
   );

@@ -1,15 +1,14 @@
 /* ============================================
    ACCOUNTS & CARDS PAGE
-   Tab-based page showing accounts and cards
-   with add modals and expandable rows.
-
-   Currently uses mock data. Will connect to
-   the API in Phase 3.
+   Tab-based page with cash account support.
+   Cash accounts appear alongside bank accounts
+   with appropriate stats calculation.
    ============================================ */
 
 import { useState } from "react";
 import { type Account, type Card } from "../models/types";
-import { formatCurrency } from "../utils/formatters";
+import { formatCurrency, getDaysUntil } from "../utils/formatters";
+import { detectCardNetwork } from "../constants/accounts";
 import StatCard from "../components/common/StatCard";
 import EmptyState from "../components/common/EmptyState";
 import Tabs from "../components/common/Tabs";
@@ -17,13 +16,11 @@ import AccountRow from "../components/accounts/AccountRow";
 import CardRow from "../components/accounts/CardRow";
 import AddAccountModal from "../components/accounts/AddAccountModal";
 import AddCardModal from "../components/accounts/AddCardModal";
-import { type AccountFormData } from "../components/accounts/AddAccountModal";
-import { type CardFormData } from "../components/accounts/AddCardModal";
-import { getDaysUntil } from "../utils/formatters";
-import { detectCardNetwork } from "../constants/accounts";
-import "./AccountsPage.css";
 import EditAccountModal from "../components/accounts/EditAccountModal";
 import EditCardModal from "../components/accounts/EditCardModal";
+import { type AccountFormData } from "../components/accounts/AddAccountModal";
+import { type CardFormData } from "../components/accounts/AddCardModal";
+import "./AccountsPage.css";
 
 /* ---------- Mock Data ---------- */
 
@@ -37,10 +34,10 @@ const INITIAL_ACCOUNTS: Account[] = [
     type: "checking",
     initialBalance: 750000,
     balance: 820000,
-    interestRate: undefined,
     tags: ["Primary"],
     visibility: "private",
     status: "active",
+    includeInGlobalBalance: true,
   },
   {
     id: "2",
@@ -55,6 +52,37 @@ const INITIAL_ACCOUNTS: Account[] = [
     tags: [],
     visibility: "private",
     status: "active",
+    includeInGlobalBalance: true,
+  },
+  {
+    id: "cash-1",
+    name: "Wallet",
+    bankInstitution: "",
+    country: "",
+    currency: "USD",
+    type: "cash",
+    initialBalance: 34000,
+    balance: 34000,
+    tags: [],
+    visibility: "private",
+    status: "active",
+    location: "Wallet",
+    includeInGlobalBalance: true,
+  },
+  {
+    id: "cash-2",
+    name: "Home safe",
+    bankInstitution: "",
+    country: "",
+    currency: "USD",
+    type: "cash",
+    initialBalance: 50000,
+    balance: 50000,
+    tags: [],
+    visibility: "private",
+    status: "active",
+    location: "Home",
+    includeInGlobalBalance: true,
   },
 ];
 
@@ -72,6 +100,7 @@ const INITIAL_CARDS: Card[] = [
     currentBalance: -83050,
     statementClosingDate: "2026-03-20",
     paymentDueDate: "2026-03-25",
+    includeInGlobalBalance: true,
   },
   {
     id: "2",
@@ -80,16 +109,14 @@ const INITIAL_CARDS: Card[] = [
     network: "mastercard",
     bank: "BCR",
     lastFourDigits: "8832",
-    associatedAccountId: undefined,
     status: "active",
     creditLimit: 300000,
     currentBalance: -40000,
     statementClosingDate: "2026-04-05",
     paymentDueDate: "2026-04-15",
+    includeInGlobalBalance: false,
   },
 ];
-
-/* ---------- Tab config ---------- */
 
 const PAGE_TABS = [
   { id: "accounts", label: "Accounts" },
@@ -110,24 +137,34 @@ export default function AccountsPage() {
   const [editingCard, setEditingCard] = useState<Card | null>(null);
 
   /* ---------- Account calculations ---------- */
-  const totalBalance = accounts
-    .filter((a) => a.status === "active")
+
+  const activeAccounts = accounts.filter((a) => a.status === "active");
+  const bankAccounts = activeAccounts.filter((a) => a.type !== "cash");
+  const cashAccounts = activeAccounts.filter((a) => a.type === "cash");
+
+  const totalBalance = activeAccounts
+    .filter((a) => a.includeInGlobalBalance)
     .reduce((sum, a) => sum + a.balance, 0);
 
-  const savingsBalance = accounts
-    .filter((a) => a.type === "savings" && a.status === "active")
+  const cashBalance = cashAccounts
+    .filter((a) => a.includeInGlobalBalance)
     .reduce((sum, a) => sum + a.balance, 0);
 
-  const activeAccountCount = accounts.filter(
-    (a) => a.status === "active",
-  ).length;
-  const inactiveAccountCount = accounts.filter(
-    (a) => a.status !== "active",
-  ).length;
+  const savingsBalance = activeAccounts
+    .filter((a) => a.type === "savings")
+    .reduce((sum, a) => sum + a.balance, 0);
+
+  //   const inactiveCount = accounts.filter((a) => a.status !== "active").length;
 
   /* ---------- Card calculations ---------- */
+
   const totalDebt = cards
-    .filter((c) => c.type === "credit" && c.status === "active")
+    .filter(
+      (c) =>
+        c.type === "credit" &&
+        c.status === "active" &&
+        c.includeInGlobalBalance,
+    )
     .reduce((sum, c) => sum + Math.abs(c.currentBalance), 0);
 
   const totalCreditLimit = cards
@@ -158,15 +195,18 @@ export default function AccountsPage() {
   /* ---------- Handlers ---------- */
 
   function handleAddAccount(data: AccountFormData) {
+    const isCash = data.type === "cash";
+    const balanceCents = Math.round(Number(data.initialBalance) * 100);
+
     const newAccount: Account = {
       id: String(Date.now()),
       name: data.name,
-      bankInstitution: data.bankInstitution,
-      country: data.country,
+      bankInstitution: isCash ? "" : data.bankInstitution,
+      country: isCash ? "" : data.country,
       currency: data.currency,
       type: data.type,
-      initialBalance: Math.round(Number(data.initialBalance) * 100),
-      balance: Math.round(Number(data.initialBalance) * 100),
+      initialBalance: balanceCents,
+      balance: balanceCents,
       interestRate: data.interestRate ? Number(data.interestRate) : undefined,
       tags: data.tags
         ? data.tags
@@ -174,8 +214,10 @@ export default function AccountsPage() {
             .map((t) => t.trim())
             .filter(Boolean)
         : [],
-      visibility: data.visibility,
+      visibility: isCash ? "private" : data.visibility,
       status: "active",
+      location: isCash ? data.location : undefined,
+      includeInGlobalBalance: data.includeInGlobalBalance,
     };
     setAccounts((prev) => [...prev, newAccount]);
   }
@@ -198,6 +240,7 @@ export default function AccountsPage() {
         : 0,
       statementClosingDate: data.statementClosingDate || undefined,
       paymentDueDate: data.paymentDueDate || undefined,
+      includeInGlobalBalance: data.includeInGlobalBalance,
     };
     setCards((prev) => [...prev, newCard]);
   }
@@ -268,12 +311,11 @@ export default function AccountsPage() {
 
   return (
     <div className="accountsPage">
-      {/* Header */}
       <div className="accountsPage-header">
         <div>
           <h2 className="accountsPage-title">Accounts & cards</h2>
           <p className="accountsPage-subtitle">
-            Manage your bank accounts and payment cards
+            Manage your bank accounts, cash, and payment cards
           </p>
         </div>
         <button className="accountsPage-addBtn" onClick={handleAddClick}>
@@ -282,7 +324,6 @@ export default function AccountsPage() {
         </button>
       </div>
 
-      {/* Tabs */}
       <Tabs tabs={PAGE_TABS} activeTab={activeTab} onTabChange={setActiveTab} />
 
       {/* Accounts tab */}
@@ -292,36 +333,63 @@ export default function AccountsPage() {
             <StatCard
               label="Total balance"
               value={formatCurrency(totalBalance)}
-              subtitle={`Across ${activeAccountCount} account${activeAccountCount !== 1 ? "s" : ""}`}
+              subtitle={`Across ${activeAccounts.filter((a) => a.includeInGlobalBalance).length} accounts`}
+            />
+            <StatCard
+              label="Cash on hand"
+              value={formatCurrency(cashBalance)}
+              subtitle={`${cashAccounts.length} cash account${cashAccounts.length !== 1 ? "s" : ""}`}
             />
             <StatCard
               label="Savings"
               value={formatCurrency(savingsBalance)}
               subtitle={`${accounts.filter((a) => a.type === "savings").length} savings account${accounts.filter((a) => a.type === "savings").length !== 1 ? "s" : ""}`}
             />
-            <StatCard
-              label="Active accounts"
-              value={String(activeAccountCount)}
-              subtitle={`${inactiveAccountCount} inactive`}
-            />
           </div>
 
           {accounts.length === 0 ? (
             <EmptyState
               icon={<AccountEmptyIcon />}
-              message="No accounts added yet. Add your first bank account to start tracking your finances."
+              message="No accounts added yet. Add your first bank account or cash to start tracking your finances."
               actionLabel="Add account"
               onAction={() => setIsAddAccountOpen(true)}
             />
           ) : (
-            accounts.map((account) => (
-              <AccountRow
-                key={account.id}
-                account={account}
-                onEdit={handleEditAccount}
-                onDeactivate={handleDeactivateAccount}
-              />
-            ))
+            <>
+              {/* Bank accounts */}
+              {bankAccounts.length > 0 && (
+                <div className="accountsPage-section">
+                  <h3 className="accountsPage-sectionTitle">Bank accounts</h3>
+                  {accounts
+                    .filter((a) => a.type !== "cash")
+                    .map((account) => (
+                      <AccountRow
+                        key={account.id}
+                        account={account}
+                        onEdit={handleEditAccount}
+                        onDeactivate={handleDeactivateAccount}
+                      />
+                    ))}
+                </div>
+              )}
+
+              {/* Cash accounts */}
+              {cashAccounts.length > 0 && (
+                <div className="accountsPage-section">
+                  <h3 className="accountsPage-sectionTitle">Cash</h3>
+                  {accounts
+                    .filter((a) => a.type === "cash")
+                    .map((account) => (
+                      <AccountRow
+                        key={account.id}
+                        account={account}
+                        onEdit={handleEditAccount}
+                        onDeactivate={handleDeactivateAccount}
+                      />
+                    ))}
+                </div>
+              )}
+            </>
           )}
         </>
       )}
@@ -344,9 +412,7 @@ export default function AccountsPage() {
             <StatCard
               label="Next payment due"
               value={nextPaymentDate}
-              subtitle={
-                nextPaymentUrgency ? `${nextPaymentUrgency}` : undefined
-              }
+              subtitle={nextPaymentUrgency ? nextPaymentUrgency : undefined}
               subtitleType={
                 nextPaymentUrgency === "Overdue" ? "negative" : "neutral"
               }
@@ -405,8 +471,6 @@ export default function AccountsPage() {
     </div>
   );
 }
-
-/* ---------- Icons ---------- */
 
 function PlusIcon() {
   return (

@@ -33,6 +33,7 @@ interface EditAccountForm {
   interestRate: string;
   visibility: Visibility;
   tags: string;
+  includeInGlobalBalance: boolean;
 }
 
 export default function EditAccountModal({
@@ -55,18 +56,20 @@ export default function EditAccountModal({
 
   const selectedCountry = COUNTRIES.find((c) => c.code === form.country);
 
-  function handleChange(field: keyof EditAccountForm, value: string) {
+  function handleChange(field: keyof EditAccountForm, value: string | boolean) {
     setForm((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: "" }));
 
     if (field === "country") {
-      const country = COUNTRIES.find((c) => c.code === value);
+      const countryValue = value as string;
+      const country = COUNTRIES.find((c) => c.code === countryValue);
       if (country) {
         setForm((prev) => ({
           ...prev,
-          country: value,
+          country: countryValue,
           currency: country.currency,
         }));
+        setErrors({});
       }
     }
   }
@@ -104,6 +107,7 @@ export default function EditAccountModal({
             .map((t) => t.trim())
             .filter(Boolean)
         : [],
+      includeInGlobalBalance: form.includeInGlobalBalance,
     };
 
     onSave(updated);
@@ -204,6 +208,32 @@ export default function EditAccountModal({
         </div>
       </div>
 
+      <div className="form-group">
+        <label
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            cursor: "pointer",
+            fontSize: "var(--font-size-sm)",
+            color: "var(--color-text-primary)",
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={form.includeInGlobalBalance}
+            onChange={(e) =>
+              handleChange("includeInGlobalBalance", e.target.checked)
+            }
+            style={{ width: "16px", height: "16px", cursor: "pointer" }}
+          />
+          Include in global balance
+        </label>
+        <div className="form-hint" style={{ marginLeft: "24px" }}>
+          When enabled, this account's balance counts toward your total
+        </div>
+      </div>
+
       <div className="form-row">
         <div className="form-group">
           <label className="form-label">Visibility</label>
@@ -254,6 +284,7 @@ function getInitialForm(account: Account | null): EditAccountForm {
       interestRate: "",
       visibility: "private",
       tags: "",
+      includeInGlobalBalance: true,
     };
   }
 
@@ -268,5 +299,6 @@ function getInitialForm(account: Account | null): EditAccountForm {
     interestRate: account.interestRate ? String(account.interestRate) : "",
     visibility: account.visibility,
     tags: account.tags.join(", "),
+    includeInGlobalBalance: account.includeInGlobalBalance,
   };
 }

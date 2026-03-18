@@ -1,7 +1,5 @@
 /* ============================================
-   COUNTRY & CURRENCY CONSTANTS
-   Curated list of countries with their primary
-   currencies. Expandable over time or via API.
+   COUNTRY, CURRENCY & ACCOUNT CONSTANTS
    ============================================ */
 
 export interface CountryConfig {
@@ -34,10 +32,6 @@ export const COUNTRIES: CountryConfig[] = [
   { code: "CN", name: "China", currency: "CNY", currencySymbol: "¥" },
 ];
 
-/**
- * All available currencies derived from countries.
- * Deduplicated for use in currency selectors.
- */
 export const CURRENCIES = Array.from(
   new Map(
     COUNTRIES.map((c) => [
@@ -49,29 +43,32 @@ export const CURRENCIES = Array.from(
 
 /**
  * Account type labels for display.
+ * Cash is included but handled differently in forms.
  */
 export const ACCOUNT_TYPE_OPTIONS = [
   { value: "checking", label: "Checking" },
   { value: "savings", label: "Savings" },
   { value: "investment", label: "Investment" },
   { value: "enterprise", label: "Enterprise" },
+  { value: "cash", label: "Cash" },
 ] as const;
 
 /**
- * Visibility options for display.
+ * Bank account types only (excludes cash).
  */
+export const BANK_ACCOUNT_TYPE_OPTIONS = [
+  { value: "checking", label: "Checking" },
+  { value: "savings", label: "Savings" },
+  { value: "investment", label: "Investment" },
+  { value: "enterprise", label: "Enterprise" },
+] as const;
+
 export const VISIBILITY_OPTIONS = [
   { value: "private", label: "Private" },
   { value: "shared", label: "Shared" },
   { value: "public", label: "Public" },
 ] as const;
 
-/**
- * Detects card network from first digit.
- * Visa: starts with 4
- * Mastercard: starts with 5
- * Amex: starts with 3
- */
 export function detectCardNetwork(
   firstDigit: string,
 ): "visa" | "mastercard" | "amex" | "other" {
@@ -87,9 +84,6 @@ export function detectCardNetwork(
   }
 }
 
-/**
- * Card network display config.
- */
 export const CARD_NETWORK_CONFIG: Record<
   string,
   { label: string; gradient: string }

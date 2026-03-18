@@ -37,6 +37,7 @@ const MOCK_ACCOUNTS: Account[] = [
     tags: ["Primary"],
     visibility: "private",
     status: "active",
+    includeInGlobalBalance: true,
   },
   {
     id: "2",
@@ -51,6 +52,7 @@ const MOCK_ACCOUNTS: Account[] = [
     tags: [],
     visibility: "private",
     status: "active",
+    includeInGlobalBalance: false,
   },
 ];
 
@@ -68,6 +70,7 @@ const MOCK_CARDS: Card[] = [
     currentBalance: -83050,
     statementClosingDate: "2026-03-20",
     paymentDueDate: "2026-03-25",
+    includeInGlobalBalance: true,
   },
 ];
 

@@ -70,6 +70,11 @@ export default function CardRow({
               </span>
               <span className="cardRow-separator">·</span>
               <span>{card.bank}</span>
+              {!card.includeInGlobalBalance && (
+                <span className="cardRow-tagExcluded">
+                  Excluded from global
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -158,7 +163,12 @@ export default function CardRow({
               </div>
             </div>
           </div>
-
+          <div className="cardRow-detailItem">
+            <div className="cardRow-detailLabel">In global balance</div>
+            <div className="cardRow-detailValue">
+              {card.includeInGlobalBalance ? "Yes" : "No"}
+            </div>
+          </div>
           <div className="cardRow-actions">
             <button className="cardRow-btn" onClick={() => onEdit(card.id)}>
               Edit

@@ -1,0 +1,57 @@
+/* ============================================
+   ACCOUNTS OVERVIEW STYLES
+   ============================================ */
+
+.accountsOverview-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--color-border-secondary);
+}
+
+.accountsOverview-row:last-child {
+  border-bottom: none;
+}
+
+.accountsOverview-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  min-width: 0;
+}
+
+.accountsOverview-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+.accountsOverview-name {
+  display: block;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+}
+
+.accountsOverview-type {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.accountsOverview-balance {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  flex-shrink: 0;
+}
+
+.accountsOverview-balance.negative {
+  color: var(--color-danger);
+}

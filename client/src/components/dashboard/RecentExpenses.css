@@ -1,0 +1,45 @@
+/* ============================================
+   RECENT EXPENSES STYLES
+   ============================================ */
+
+.recentExpenses-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--color-border-secondary);
+}
+
+.recentExpenses-row:last-child {
+  border-bottom: none;
+}
+
+.recentExpenses-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  min-width: 0;
+}
+
+.recentExpenses-name {
+  display: block;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recentExpenses-date {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.recentExpenses-amount {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  flex-shrink: 0;
+  margin-left: var(--space-md);
+}

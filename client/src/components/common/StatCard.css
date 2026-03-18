@@ -1,0 +1,41 @@
+/* ============================================
+   STAT CARD STYLES
+   ============================================ */
+
+.statCard {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+}
+
+.statCard-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.statCard-value {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.statCard-subtitle {
+  font-size: var(--font-size-xs);
+  margin-top: var(--space-xs);
+}
+
+.statCard-subtitle.positive {
+  color: var(--color-success);
+}
+
+.statCard-subtitle.negative {
+  color: var(--color-danger);
+}
+
+.statCard-subtitle.neutral {
+  color: var(--color-text-tertiary);
+}

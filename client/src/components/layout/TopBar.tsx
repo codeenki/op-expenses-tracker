@@ -42,7 +42,7 @@ export default function TopBar({
 
   return (
     <header className={topbarClasses}>
-      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+      <div className="topbarLeft">
         <button className="hamburger" onClick={onOpenMobileSidebar}>
           <HamburgerIcon />
         </button>

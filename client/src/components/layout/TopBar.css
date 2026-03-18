@@ -1,0 +1,102 @@
+/* ============================================
+   TOPBAR STYLES
+   Fixed top bar that adapts to sidebar width.
+   ============================================ */
+
+.topbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: var(--sidebar-width);
+  height: var(--topbar-height);
+  background: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border-secondary);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-xl);
+  z-index: 50;
+  transition: left var(--transition-normal);
+}
+
+.topbar.sidebarCollapsed {
+  left: var(--sidebar-collapsed-width);
+}
+
+.topbarLeft {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.pageTitle {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.topbarRight {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xs);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+}
+
+.hamburger:hover {
+  background: var(--color-border-secondary);
+  color: var(--color-text-primary);
+}
+
+.topbarBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xs);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.topbarBtn:hover {
+  background: var(--color-border-secondary);
+  color: var(--color-text-primary);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 768px) {
+  .topbar {
+    left: 0;
+  }
+
+  .topbar.sidebarCollapsed {
+    left: 0;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .topbar {
+    left: var(--sidebar-collapsed-width);
+  }
+
+  .topbar.sidebarCollapsed {
+    left: var(--sidebar-collapsed-width);
+  }
+}

@@ -61,6 +61,11 @@ export default function Sidebar({
       />
 
       <aside className={sidebarClasses}>
+        {/* Mobile close button — visible only on small screens */}
+        <button className="mobileCloseBtn" onClick={onCloseMobile}>
+          <CloseIcon />
+        </button>
+
         {/* Profile section */}
         <NavLink
           to={ROUTES.PROFILE}
@@ -117,11 +122,19 @@ export default function Sidebar({
 }
 
 /* ---------- Icon components ---------- */
-/*
- * Icons are defined as small components so they're
- * easy to swap out later (e.g., for an icon library).
- * Each returns a 16x16 SVG.
- */
+
+function CloseIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <path
+        d="M4 4L14 14M14 4L4 14"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
 
 function DashboardIcon() {
   return (

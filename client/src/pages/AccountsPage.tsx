@@ -22,6 +22,8 @@ import { type CardFormData } from "../components/accounts/AddCardModal";
 import { getDaysUntil } from "../utils/formatters";
 import { detectCardNetwork } from "../constants/accounts";
 import "./AccountsPage.css";
+import EditAccountModal from "../components/accounts/EditAccountModal";
+import EditCardModal from "../components/accounts/EditCardModal";
 
 /* ---------- Mock Data ---------- */
 
@@ -102,6 +104,10 @@ export default function AccountsPage() {
   const [cards, setCards] = useState<Card[]>(INITIAL_CARDS);
   const [isAddAccountOpen, setIsAddAccountOpen] = useState(false);
   const [isAddCardOpen, setIsAddCardOpen] = useState(false);
+  const [isEditAccountOpen, setIsEditAccountOpen] = useState(false);
+  const [editingAccount, setEditingAccount] = useState<Account | null>(null);
+  const [isEditCardOpen, setIsEditCardOpen] = useState(false);
+  const [editingCard, setEditingCard] = useState<Card | null>(null);
 
   /* ---------- Account calculations ---------- */
   const totalBalance = accounts
@@ -197,7 +203,15 @@ export default function AccountsPage() {
   }
 
   function handleEditAccount(id: string) {
-    console.log("Edit account:", id);
+    const account = accounts.find((a) => a.id === id);
+    if (account) {
+      setEditingAccount(account);
+      setIsEditAccountOpen(true);
+    }
+  }
+
+  function handleSaveAccount(updated: Account) {
+    setAccounts((prev) => prev.map((a) => (a.id === updated.id ? updated : a)));
   }
 
   function handleDeactivateAccount(id: string) {
@@ -217,7 +231,15 @@ export default function AccountsPage() {
   }
 
   function handleEditCard(id: string) {
-    console.log("Edit card:", id);
+    const card = cards.find((c) => c.id === id);
+    if (card) {
+      setEditingCard(card);
+      setIsEditCardOpen(true);
+    }
+  }
+
+  function handleSaveCard(updated: Card) {
+    setCards((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
   }
 
   function handleDeactivateCard(id: string) {
@@ -364,6 +386,21 @@ export default function AccountsPage() {
         accounts={accounts}
         onClose={() => setIsAddCardOpen(false)}
         onSubmit={handleAddCard}
+      />
+
+      <EditAccountModal
+        account={editingAccount}
+        isOpen={isEditAccountOpen}
+        onClose={() => setIsEditAccountOpen(false)}
+        onSave={handleSaveAccount}
+      />
+
+      <EditCardModal
+        card={editingCard}
+        isOpen={isEditCardOpen}
+        accounts={accounts}
+        onClose={() => setIsEditCardOpen(false)}
+        onSave={handleSaveCard}
       />
     </div>
   );

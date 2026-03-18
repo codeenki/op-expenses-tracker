@@ -1,0 +1,89 @@
+/* ============================================
+   TRANSACTION CHART STYLES
+   ============================================ */
+
+.txChart {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.txChart-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.txChart-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.txChart-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.txChart-monthSel {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-xs);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-secondary);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.txChart-toggleGrp {
+  display: flex;
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.txChart-toggleBtn {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-xs);
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: none;
+  cursor: pointer;
+  border-right: 1px solid var(--color-border-secondary);
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.txChart-toggleBtn:last-child {
+  border-right: none;
+}
+
+.txChart-toggleBtn.active {
+  background: var(--color-accent-light);
+  color: var(--color-accent-text);
+}
+
+.txChart-canvas {
+  height: 160px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 768px) {
+  .txChart-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .txChart-controls {
+    width: 100%;
+  }
+}

@@ -1,7 +1,7 @@
 /* ============================================
    DASHBOARD PAGE
    Main overview page composing stat cards,
-   recent expenses, spending chart, accounts,
+   recent transactions, spending chart, accounts,
    and upcoming payments.
 
    Currently uses mock data. Will connect to
@@ -10,11 +10,11 @@
 
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../constants/routes";
-import type {
-  Expense,
-  Account,
-  RecurringPayment,
-  CategorySummary,
+import {
+  type Transaction,
+  type Account,
+  type RecurringPayment,
+  type CategorySummary,
 } from "../models/types";
 import { formatCurrency } from "../utils/formatters";
 import { DASHBOARD_RECENT_EXPENSES_COUNT } from "../constants/categories";
@@ -27,49 +27,76 @@ import UpcomingPayments from "../components/dashboard/UpcomingPayments";
 import "./Dashboard.css";
 
 /* ---------- Mock Data ---------- */
-/*
- * This mock data lets us build and test the UI
- * before the backend exists. We'll replace this
- * with real API calls in Phase 3.
- *
- * Set any array to [] to see the empty states.
- */
 
-const MOCK_EXPENSES: Expense[] = [
+const MOCK_TRANSACTIONS: Transaction[] = [
   {
     id: "1",
     title: "Lunch — Soda El Parque",
+    description: "Casado with chicken",
     amount: 850,
-    category: "food",
+    currency: "USD",
     date: "2026-03-18T12:34:00",
+    sourceType: "account",
+    sourceId: "1",
+    sourceName: "BAC Checking",
+    type: "expense",
+    category: "food",
+    tags: ["Lunch", "Work"],
+    recurrence: "none",
   },
   {
     id: "2",
     title: "Bus fare",
     amount: 125,
-    category: "transport",
+    currency: "USD",
     date: "2026-03-18T08:10:00",
+    sourceType: "cash",
+    sourceName: "Cash",
+    type: "expense",
+    category: "transport",
+    tags: [],
+    recurrence: "none",
   },
   {
     id: "3",
     title: "Amazon — USB cable",
     amount: 1299,
-    category: "shopping",
+    currency: "USD",
     date: "2026-03-17T15:00:00",
+    sourceType: "credit_card",
+    sourceId: "1",
+    sourceName: "Visa ••4521",
+    type: "expense",
+    category: "shopping",
+    tags: ["Tech"],
+    recurrence: "none",
   },
   {
     id: "4",
     title: "Electricity bill",
     amount: 4500,
-    category: "bills",
+    currency: "USD",
     date: "2026-03-15T09:00:00",
+    sourceType: "account",
+    sourceId: "1",
+    sourceName: "BAC Checking",
+    type: "expense",
+    category: "bills",
+    tags: [],
+    recurrence: "monthly",
   },
   {
     id: "5",
     title: "Coffee — Starbucks",
     amount: 575,
-    category: "food",
+    currency: "USD",
     date: "2026-03-14T07:45:00",
+    sourceType: "cash",
+    sourceName: "Cash",
+    type: "expense",
+    category: "food",
+    tags: [],
+    recurrence: "none",
   },
 ];
 
@@ -77,23 +104,42 @@ const MOCK_ACCOUNTS: Account[] = [
   {
     id: "1",
     name: "BAC Checking",
-    type: "checking",
-    balance: 820000,
+    bankInstitution: "BAC San José",
+    country: "Costa Rica",
     currency: "USD",
+    type: "checking",
+    initialBalance: 750000,
+    balance: 820000,
+    tags: ["Primary"],
+    visibility: "private",
+    status: "active",
   },
   {
     id: "2",
     name: "BCR Savings",
-    type: "savings",
-    balance: 391000,
+    bankInstitution: "BCR",
+    country: "Costa Rica",
     currency: "USD",
+    type: "savings",
+    initialBalance: 300000,
+    balance: 391000,
+    interestRate: 4.5,
+    tags: [],
+    visibility: "private",
+    status: "active",
   },
   {
     id: "3",
     name: "Visa Gold",
-    type: "credit_card",
-    balance: -83050,
+    bankInstitution: "BAC",
+    country: "Costa Rica",
     currency: "USD",
+    type: "checking",
+    initialBalance: 0,
+    balance: -83050,
+    tags: [],
+    visibility: "private",
+    status: "active",
   },
 ];
 
@@ -140,18 +186,17 @@ function calculateGlobalBalance(accounts: Account[]): number {
 
 function calculateCreditDebt(accounts: Account[]): number {
   return accounts
-    .filter((acc) => acc.type === "credit_card" && acc.balance < 0)
+    .filter((acc) => acc.balance < 0)
     .reduce((sum, acc) => sum + Math.abs(acc.balance), 0);
 }
 
 function getCreditCardCount(accounts: Account[]): number {
-  return accounts.filter((acc) => acc.type === "credit_card").length;
+  return accounts.filter((acc) => acc.balance < 0).length;
 }
 
-function getCashBalance(accounts: Account[]): number {
-  return accounts
-    .filter((acc) => acc.type === "cash")
-    .reduce((sum, acc) => sum + acc.balance, 0);
+function getCashBalance(): number {
+  /* Cash balance would come from a dedicated cash entity in the future */
+  return 34000;
 }
 
 /* ---------- Component ---------- */
@@ -162,20 +207,19 @@ export default function Dashboard() {
   const globalBalance = calculateGlobalBalance(MOCK_ACCOUNTS);
   const creditDebt = calculateCreditDebt(MOCK_ACCOUNTS);
   const creditCardCount = getCreditCardCount(MOCK_ACCOUNTS);
-  const cashBalance = getCashBalance(MOCK_ACCOUNTS);
+  const cashBalance = getCashBalance();
 
-  const recentExpenses = MOCK_EXPENSES.slice(
-    0,
-    DASHBOARD_RECENT_EXPENSES_COUNT,
-  );
+  const recentTransactions = MOCK_TRANSACTIONS.filter(
+    (t) => t.type === "expense",
+  ).slice(0, DASHBOARD_RECENT_EXPENSES_COUNT);
 
   function handleQuickExpense() {
-    // TODO: Open quick expense modal
+    /* TODO: Open quick expense modal */
     console.log("Open quick expense modal");
   }
 
-  function handleNavigateExpenses() {
-    navigate(ROUTES.EXPENSES);
+  function handleNavigateTransactions() {
+    navigate(ROUTES.TRANSACTIONS);
   }
 
   function handleNavigateAccounts() {
@@ -198,9 +242,9 @@ export default function Dashboard() {
           </button>
           <button
             className="dashboard-btnOutline"
-            onClick={handleNavigateExpenses}
+            onClick={handleNavigateTransactions}
           >
-            View all expenses
+            View all transactions
           </button>
         </div>
       </div>
@@ -239,15 +283,15 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* Middle row: expenses + chart */}
+      {/* Middle row: transactions + chart */}
       <div className="dashboard-gridMain">
         <DashboardCard
           title="Recent expenses"
           actionLabel="See all"
-          onAction={handleNavigateExpenses}
+          onAction={handleNavigateTransactions}
         >
           <RecentExpenses
-            expenses={recentExpenses}
+            transactions={recentTransactions}
             onAddExpense={handleQuickExpense}
           />
         </DashboardCard>
@@ -284,8 +328,6 @@ export default function Dashboard() {
     </div>
   );
 }
-
-/* ---------- Icons ---------- */
 
 function PlusIcon() {
   return (

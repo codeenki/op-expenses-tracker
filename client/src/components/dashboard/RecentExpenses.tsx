@@ -1,25 +1,26 @@
 /* ============================================
    RECENT EXPENSES COMPONENT
    Shows the latest expenses on the Dashboard.
-   Handles empty state when no expenses exist.
+   Handles empty state when no transactions exist.
+   Now uses Transaction model with title field.
    ============================================ */
 
-import type { Expense } from "../../models/types";
+import { type Transaction } from "../../models/types";
 import { formatCurrency, formatRelativeDate } from "../../utils/formatters";
 import CategoryIcon from "../common/CategoryIcon";
 import EmptyState from "../common/EmptyState";
 import "./RecentExpenses.css";
 
 interface RecentExpensesProps {
-  expenses: Expense[];
+  transactions: Transaction[];
   onAddExpense: () => void;
 }
 
 export default function RecentExpenses({
-  expenses,
+  transactions,
   onAddExpense,
 }: RecentExpensesProps) {
-  if (expenses.length === 0) {
+  if (transactions.length === 0) {
     return (
       <EmptyState
         icon={<ExpenseEmptyIcon />}
@@ -32,19 +33,19 @@ export default function RecentExpenses({
 
   return (
     <div className="recentExpenses">
-      {expenses.map((expense) => (
-        <div key={expense.id} className="recentExpenses-row">
+      {transactions.map((tx) => (
+        <div key={tx.id} className="recentExpenses-row">
           <div className="recentExpenses-left">
-            <CategoryIcon category={expense.category} />
+            <CategoryIcon category={tx.category} />
             <div>
-              <span className="recentExpenses-name">{expense.title}</span>
+              <span className="recentExpenses-name">{tx.title}</span>
               <span className="recentExpenses-date">
-                {formatRelativeDate(expense.date)}
+                {formatRelativeDate(tx.date)}
               </span>
             </div>
           </div>
           <span className="recentExpenses-amount">
-            -{formatCurrency(expense.amount)}
+            -{formatCurrency(tx.amount, tx.currency)}
           </span>
         </div>
       ))}

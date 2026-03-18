@@ -4,6 +4,7 @@ import Layout from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import PlaceholderPage from "./pages/PlaceholderPage";
 import AccountsPage from "./pages/AccountsPage";
+import TransactionsPage from "./pages/TransactionsPage";
 
 export default function App() {
   return (
@@ -12,10 +13,7 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
           <Route path={ROUTES.ACCOUNTS} element={<AccountsPage />} />
-          <Route
-            path={ROUTES.EXPENSES}
-            element={<PlaceholderPage title="Expenses" />}
-          />
+          <Route path={ROUTES.TRANSACTIONS} element={<TransactionsPage />} />
           <Route
             path={ROUTES.INCOME}
             element={<PlaceholderPage title="Income & Payments" />}

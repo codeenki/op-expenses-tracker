@@ -1,0 +1,147 @@
+/* ============================================
+   TRANSACTION LIST STYLES
+   ============================================ */
+
+.txList {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.txList-header {
+  display: grid;
+  grid-template-columns: 32px 2fr 1fr 1fr 80px 90px;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--color-border-secondary);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-weight: var(--font-weight-medium);
+}
+
+.txList-row {
+  display: grid;
+  grid-template-columns: 32px 2fr 1fr 1fr 80px 90px;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  border-bottom: 1px solid var(--color-border-secondary);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  align-items: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+}
+
+.txList-row:last-child {
+  border-bottom: none;
+}
+
+.txList-row:hover {
+  background: var(--color-bg-secondary);
+}
+
+.txList-cellIcon {
+  display: flex;
+  align-items: center;
+}
+
+.txList-cellDesc {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 0;
+}
+
+.txList-descText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.txList-recurrBadge {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-warning-light);
+  color: var(--color-warning);
+  flex-shrink: 0;
+}
+
+.txList-cellDate {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.txList-cellSource {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.txList-cellType {
+  display: flex;
+  align-items: center;
+}
+
+.txList-typeBadge {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  display: inline-block;
+}
+
+.txList-typeBadge.expense {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+.txList-typeBadge.income {
+  background: var(--color-success-light);
+  color: var(--color-success);
+}
+
+.txList-typeBadge.transfer {
+  background: var(--color-info-light);
+  color: var(--color-info);
+}
+
+.txList-cellAmount {
+  text-align: right;
+  font-weight: var(--font-weight-medium);
+}
+
+.txList-cellAmount.negative {
+  color: var(--color-danger);
+}
+
+.txList-cellAmount.positive {
+  color: var(--color-success);
+}
+
+.txList-cellAmount.neutral {
+  color: var(--color-text-secondary);
+}
+
+.txList-colAmount {
+  text-align: right;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 768px) {
+  .txList-header,
+  .txList-row {
+    grid-template-columns: 26px 1.5fr 1fr 70px;
+  }
+
+  /* Hide source and type columns on mobile */
+  .txList-colSource,
+  .txList-colType,
+  .txList-cellSource,
+  .txList-cellType {
+    display: none;
+  }
+}

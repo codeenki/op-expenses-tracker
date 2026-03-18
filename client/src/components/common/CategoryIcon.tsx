@@ -1,16 +1,16 @@
 /* ============================================
    CATEGORY ICONS
-   SVG icon components for each expense category.
-   Each icon is 16x16 and uses currentColor so it
-   inherits the parent's text color.
+   SVG icon components for each transaction
+   category. Uses currentColor to inherit
+   the parent's text color.
    ============================================ */
 
-import type { ExpenseCategory } from "../../models/types";
+import { type TransactionCategory } from "../../models/types";
 import { CATEGORY_CONFIG } from "../../constants/categories";
 import "./CategoryIcon.css";
 
 interface CategoryIconProps {
-  category: ExpenseCategory;
+  category: TransactionCategory;
   size?: number;
 }
 
@@ -19,7 +19,7 @@ export default function CategoryIcon({
   size = 32,
 }: CategoryIconProps) {
   const config = CATEGORY_CONFIG[category];
-  const Icon = ICON_MAP[category];
+  const Icon = ICON_MAP[category] || OtherIcon;
 
   return (
     <div
@@ -36,9 +36,7 @@ export default function CategoryIcon({
   );
 }
 
-/* ---------- Icon mapping ---------- */
-
-const ICON_MAP: Record<ExpenseCategory, React.FC> = {
+const ICON_MAP: Record<TransactionCategory, React.FC> = {
   food: FoodIcon,
   transport: TransportIcon,
   shopping: ShoppingIcon,
@@ -46,10 +44,12 @@ const ICON_MAP: Record<ExpenseCategory, React.FC> = {
   entertainment: EntertainmentIcon,
   health: HealthIcon,
   education: EducationIcon,
+  salary: IncomeIcon,
+  freelance: IncomeIcon,
+  investment_income: InvestmentIcon,
+  transfer: TransferIcon,
   other: OtherIcon,
 };
-
-/* ---------- SVG Icons ---------- */
 
 function FoodIcon() {
   return (
@@ -174,6 +174,82 @@ function EducationIcon() {
       />
       <path
         d="M4 7.5v4c0 1 1.8 2 4 2s4-1 4-2v-4"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function IncomeIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path
+        d="M2 13L5.5 8L8.5 10.5L14 3"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10 3H14V7"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function InvestmentIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <rect
+        x="2"
+        y="8"
+        width="3"
+        height="6"
+        rx="0.8"
+        stroke="currentColor"
+        strokeWidth="1.2"
+      />
+      <rect
+        x="6.5"
+        y="5"
+        width="3"
+        height="9"
+        rx="0.8"
+        stroke="currentColor"
+        strokeWidth="1.2"
+      />
+      <rect
+        x="11"
+        y="2"
+        width="3"
+        height="12"
+        rx="0.8"
+        stroke="currentColor"
+        strokeWidth="1.2"
+      />
+    </svg>
+  );
+}
+
+function TransferIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path
+        d="M2 5h10M9 2l3 3-3 3"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14 11H4M7 8l-3 3 3 3"
         stroke="currentColor"
         strokeWidth="1.2"
         strokeLinecap="round"

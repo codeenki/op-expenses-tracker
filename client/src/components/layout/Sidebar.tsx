@@ -24,7 +24,7 @@ interface SidebarProps {
 const NAV_ITEMS = [
   { path: ROUTES.DASHBOARD, label: "Dashboard", icon: DashboardIcon },
   { path: ROUTES.ACCOUNTS, label: "Accounts & cards", icon: AccountsIcon },
-  { path: ROUTES.EXPENSES, label: "Expenses", icon: ExpensesIcon },
+  { path: ROUTES.TRANSACTIONS, label: "Transactions", icon: TransactionsIcon },
   { path: ROUTES.INCOME, label: "Income & payments", icon: IncomeIcon },
   { path: ROUTES.ANALYTICS, label: "Analytics", icon: AnalyticsIcon },
   { path: ROUTES.SETTINGS, label: "Settings", icon: SettingsIcon },
@@ -203,7 +203,7 @@ function AccountsIcon() {
   );
 }
 
-function ExpensesIcon() {
+function TransactionsIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
       <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.2" />

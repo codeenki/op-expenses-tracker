@@ -20,7 +20,7 @@ interface TopBarProps {
 const PAGE_TITLES: Record<string, string> = {
   [ROUTES.DASHBOARD]: "Dashboard",
   [ROUTES.ACCOUNTS]: "Accounts & cards",
-  [ROUTES.EXPENSES]: "Expenses",
+  [ROUTES.TRANSACTIONS]: "Transactions",
   [ROUTES.INCOME]: "Income & payments",
   [ROUTES.ANALYTICS]: "Analytics",
   [ROUTES.SETTINGS]: "Settings",

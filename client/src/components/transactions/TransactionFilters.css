@@ -1,0 +1,104 @@
+/* ============================================
+   TRANSACTION FILTERS STYLES
+   ============================================ */
+
+.txFilters {
+  margin-bottom: var(--space-lg);
+}
+
+.txFilters-searchWrap {
+  position: relative;
+  margin-bottom: var(--space-md);
+}
+
+.txFilters-searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-tertiary);
+  display: flex;
+}
+
+.txFilters-searchInput {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md) var(--space-sm) 34px;
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-secondary);
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  transition: border-color var(--transition-fast);
+}
+
+.txFilters-searchInput:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent-light);
+}
+
+.txFilters-searchInput::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.txFilters-chips {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.txFilters-chip {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-xs);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border-secondary);
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.txFilters-chip:hover {
+  border-color: var(--color-border-primary);
+  color: var(--color-text-primary);
+}
+
+.txFilters-chip.active {
+  background: var(--color-accent-light);
+  color: var(--color-accent-text);
+  border-color: var(--color-accent);
+}
+
+.txFilters-chip.clear {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.txFilters-chip.clear:hover {
+  background: var(--color-danger-light);
+}
+
+.txFilters-select {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-xs);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border-secondary);
+  background: var(--color-bg-primary);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 768px) {
+  .txFilters-chips {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+}

@@ -1,7 +1,7 @@
 export const ROUTES = {
   DASHBOARD: "/",
   ACCOUNTS: "/accounts",
-  EXPENSES: "/expenses",
+  TRANSACTIONS: "/transactions",
   INCOME: "/income",
   ANALYTICS: "/analytics",
   SETTINGS: "/settings",

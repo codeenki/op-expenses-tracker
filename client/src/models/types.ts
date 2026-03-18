@@ -22,9 +22,9 @@ export interface Account {
   country: string;
   currency: string;
   type: AccountType;
-  initialBalance: number; // in cents
-  balance: number; // in cents, calculated
-  interestRate?: number; // annual percentage, optional
+  initialBalance: number;
+  balance: number;
+  interestRate?: number;
   tags: string[];
   visibility: Visibility;
   status: EntityStatus;
@@ -47,30 +47,45 @@ export interface Card {
   lastFourDigits: string;
   associatedAccountId?: string;
   status: EntityStatus;
-  creditLimit?: number; // in cents, credit cards only
-  currentBalance: number; // in cents, negative = debt
-  statementClosingDate?: string; // day of month as ISO string
-  paymentDueDate?: string; // day of month as ISO string
+  creditLimit?: number;
+  currentBalance: number;
+  statementClosingDate?: string;
+  paymentDueDate?: string;
 }
 
 export type CardType = "credit" | "debit";
 
 export type CardNetwork = "visa" | "mastercard" | "amex" | "other";
 
-/* ---------- Expenses ---------- */
+/* ---------- Transactions ---------- */
 
-export interface Expense {
+export interface Transaction {
   id: string;
-  title: string;
+  title: string; // short name, required (shown in lists)
+  description?: string; // optional longer notes
   amount: number; // in cents, always positive
-  category: ExpenseCategory;
+  currency: string;
   date: string; // ISO string
-  accountId?: string; // null = global expense
-  cardId?: string; // if paid with a card
+  sourceType: TransactionSource;
+  sourceId?: string;
+  sourceName: string;
+  type: TransactionType;
+  category: TransactionCategory;
+  tags: string[];
+  recurrence: Recurrence;
   notes?: string;
+  transferToId?: string;
+  transferToName?: string;
+  attachmentUrl?: string; // future: receipt photo or bill PDF
 }
 
-export type ExpenseCategory =
+export type TransactionType = "expense" | "income" | "transfer";
+
+export type TransactionSource = "account" | "credit_card" | "cash";
+
+export type Recurrence = "none" | "weekly" | "biweekly" | "monthly";
+
+export type TransactionCategory =
   | "food"
   | "transport"
   | "shopping"
@@ -78,6 +93,10 @@ export type ExpenseCategory =
   | "entertainment"
   | "health"
   | "education"
+  | "salary"
+  | "freelance"
+  | "investment_income"
+  | "transfer"
   | "other";
 
 /* ---------- Recurring Payments ---------- */
@@ -85,17 +104,17 @@ export type ExpenseCategory =
 export interface RecurringPayment {
   id: string;
   name: string;
-  amount: number; // in cents
+  amount: number;
   frequency: "weekly" | "biweekly" | "monthly";
-  nextDueDate: string; // ISO string
-  category: ExpenseCategory;
+  nextDueDate: string;
+  category: TransactionCategory;
   accountId?: string;
 }
 
 /* ---------- Analytics ---------- */
 
 export interface CategorySummary {
-  category: ExpenseCategory;
-  total: number; // in cents
+  category: TransactionCategory;
+  total: number;
   percentage: number;
 }

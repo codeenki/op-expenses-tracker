@@ -1,0 +1,43 @@
+/* ============================================
+   LAYOUT STYLES
+   Main content area that shifts based on 
+   sidebar collapsed/expanded state.
+   ============================================ */
+
+.layout {
+  min-height: 100vh;
+}
+
+.mainContent {
+  margin-left: var(--sidebar-width);
+  margin-top: var(--topbar-height);
+  padding: var(--space-xl);
+  min-height: calc(100vh - var(--topbar-height));
+  transition: margin-left var(--transition-normal);
+}
+
+.mainContent.sidebarCollapsed {
+  margin-left: var(--sidebar-collapsed-width);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 768px) {
+  .mainContent {
+    margin-left: 0;
+  }
+
+  .mainContent.sidebarCollapsed {
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .mainContent {
+    margin-left: var(--sidebar-collapsed-width);
+  }
+
+  .mainContent.sidebarCollapsed {
+    margin-left: var(--sidebar-collapsed-width);
+  }
+}

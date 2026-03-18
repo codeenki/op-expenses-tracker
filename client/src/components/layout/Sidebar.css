@@ -1,0 +1,335 @@
+/* ============================================
+   SIDEBAR STYLES
+   Collapsible sidebar with responsive behavior.
+   Mobile: hidden, triggered by hamburger.
+   Tablet: collapsed by default.
+   Desktop: expanded by default.
+   ============================================ */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: var(--sidebar-width);
+  background: var(--color-sidebar-bg);
+  border-right: 1px solid var(--color-border-secondary);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-md) 0;
+  transition: width var(--transition-normal), transform var(--transition-normal);
+  z-index: 100;
+  overflow: hidden;
+}
+
+/* Collapsed state */
+.sidebar.collapsed {
+  width: var(--sidebar-collapsed-width);
+}
+
+/* ---------- Profile section ---------- */
+
+.profileRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-lg);
+  margin-bottom: var(--space-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  border-radius: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.profileRow:hover {
+  background: var(--color-sidebar-hover);
+  text-decoration: none;
+}
+
+.profileRow.active {
+  background: var(--color-sidebar-active-bg);
+}
+
+.profileAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--color-accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-accent-text);
+  flex-shrink: 0;
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.profileName {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profileEmail {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar.collapsed .profileInfo {
+  display: none;
+}
+
+.sidebar.collapsed .profileRow {
+  justify-content: center;
+  padding: var(--space-sm) 0;
+}
+
+/* ---------- Divider ---------- */
+
+.divider {
+  height: 1px;
+  background: var(--color-border-secondary);
+  margin: 0 0 var(--space-sm);
+}
+
+/* ---------- Navigation items ---------- */
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-lg);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.navItem:hover {
+  background: var(--color-sidebar-hover);
+  color: var(--color-text-primary);
+  text-decoration: none;
+}
+
+.navItem.active {
+  background: var(--color-sidebar-active-bg);
+  color: var(--color-sidebar-active-text);
+}
+
+.navIcon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.navLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar.collapsed .navLabel {
+  display: none;
+}
+
+.sidebar.collapsed .navItem {
+  justify-content: center;
+  padding: var(--space-sm) 0;
+}
+
+/* ---------- Bottom section ---------- */
+
+.bottomSection {
+  margin-top: auto;
+  border-top: 1px solid var(--color-border-secondary);
+  padding-top: var(--space-sm);
+}
+
+.themeToggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-lg);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  width: 100%;
+}
+
+.themeToggle:hover {
+  background: var(--color-sidebar-hover);
+}
+
+.sidebar.collapsed .themeToggle {
+  justify-content: center;
+  padding: var(--space-sm) 0;
+}
+
+.sidebar.collapsed .themeLabel {
+  display: none;
+}
+
+.collapseBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-lg);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+  width: 100%;
+}
+
+.collapseBtn:hover {
+  color: var(--color-text-secondary);
+}
+
+.sidebar.collapsed .collapseBtn {
+  justify-content: center;
+  padding: var(--space-sm) 0;
+}
+
+.sidebar.collapsed .collapseLabel {
+  display: none;
+}
+
+.collapseIcon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform var(--transition-normal);
+}
+
+.sidebar.collapsed .collapseIcon {
+  transform: rotate(180deg);
+}
+
+/* ---------- Mobile overlay ---------- */
+
+.overlay {
+  display: none;
+}
+
+/* ---------- Responsive ---------- */
+
+/* Mobile: sidebar is off-screen, slides in as drawer */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: var(--sidebar-width);
+  }
+
+  .sidebar.mobileOpen {
+    transform: translateX(0);
+  }
+
+  .sidebar.collapsed {
+    width: var(--sidebar-width);
+  }
+
+  .sidebar.collapsed .profileInfo,
+  .sidebar.collapsed .navLabel,
+  .sidebar.collapsed .themeLabel,
+  .sidebar.collapsed .collapseLabel {
+    display: flex;
+  }
+
+  .sidebar.collapsed .profileRow,
+  .sidebar.collapsed .navItem,
+  .sidebar.collapsed .themeToggle,
+  .sidebar.collapsed .collapseBtn {
+    justify-content: flex-start;
+    padding: var(--space-sm) var(--space-lg);
+  }
+
+  .sidebar.collapsed .collapseIcon {
+    transform: none;
+  }
+
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+  }
+
+  .overlay.visible {
+    display: block;
+  }
+}
+
+/* Tablet: sidebar starts collapsed */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sidebar {
+    width: var(--sidebar-collapsed-width);
+  }
+
+  .sidebar .profileInfo,
+  .sidebar .navLabel,
+  .sidebar .themeLabel,
+  .sidebar .collapseLabel {
+    display: none;
+  }
+
+  .sidebar .profileRow,
+  .sidebar .navItem,
+  .sidebar .themeToggle,
+  .sidebar .collapseBtn {
+    justify-content: center;
+    padding: var(--space-sm) 0;
+  }
+
+  .sidebar .collapseIcon {
+    transform: rotate(180deg);
+  }
+
+  .sidebar.expanded {
+    width: var(--sidebar-width);
+  }
+
+  .sidebar.expanded .profileInfo,
+  .sidebar.expanded .navLabel,
+  .sidebar.expanded .themeLabel,
+  .sidebar.expanded .collapseLabel {
+    display: flex;
+  }
+
+  .sidebar.expanded .profileRow,
+  .sidebar.expanded .navItem,
+  .sidebar.expanded .themeToggle,
+  .sidebar.expanded .collapseBtn {
+    justify-content: flex-start;
+    padding: var(--space-sm) var(--space-lg);
+  }
+
+  .sidebar.expanded .collapseIcon {
+    transform: none;
+  }
+}

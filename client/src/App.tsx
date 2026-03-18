@@ -1,14 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ROUTES } from "./constants/routes";
+import Layout from "./components/layout/Layout";
+import Dashboard from "./pages/Dashboard";
+import PlaceholderPage from "./pages/PlaceholderPage";
 
-function App() {
+export default function App() {
   return (
-    <div className="app">
-      <h1>OP Expenses Tracker</h1>
-      <p>Let's build something great.</p>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+          <Route
+            path={ROUTES.ACCOUNTS}
+            element={<PlaceholderPage title="Accounts & Cards" />}
+          />
+          <Route
+            path={ROUTES.EXPENSES}
+            element={<PlaceholderPage title="Expenses" />}
+          />
+          <Route
+            path={ROUTES.INCOME}
+            element={<PlaceholderPage title="Income & Payments" />}
+          />
+          <Route
+            path={ROUTES.ANALYTICS}
+            element={<PlaceholderPage title="Analytics" />}
+          />
+          <Route
+            path={ROUTES.SETTINGS}
+            element={<PlaceholderPage title="Settings" />}
+          />
+          <Route
+            path={ROUTES.PROFILE}
+            element={<PlaceholderPage title="Profile" />}
+          />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;

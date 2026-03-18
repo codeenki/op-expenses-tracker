@@ -1,0 +1,138 @@
+/* ============================================
+   DESIGN TOKENS
+   Single source of truth for all visual values.
+   Change these to redesign the entire app.
+   ============================================ */
+
+/* ---------- Light theme ---------- */
+[data-theme="light"] {
+  /* Backgrounds */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f6f7f9;
+  --color-bg-tertiary: #eef0f3;
+
+  /* Text */
+  --color-text-primary: #1a1d23;
+  --color-text-secondary: #5f6672;
+  --color-text-tertiary: #9099a5;
+
+  /* Borders */
+  --color-border-primary: rgba(0, 0, 0, 0.15);
+  --color-border-secondary: rgba(0, 0, 0, 0.08);
+
+  /* Brand / Accent */
+  --color-accent: #2d6da5;
+  --color-accent-hover: #245a8a;
+  --color-accent-light: #e8f1f8;
+  --color-accent-text: #2d6da5;
+
+  /* Semantic */
+  --color-success: #1a8a5c;
+  --color-success-light: #e6f5ee;
+  --color-warning: #b47818;
+  --color-warning-light: #fdf3e0;
+  --color-danger: #d43535;
+  --color-danger-light: #fce8e8;
+  --color-info: #2d6da5;
+  --color-info-light: #e8f1f8;
+
+  /* Sidebar */
+  --color-sidebar-bg: #f6f7f9;
+  --color-sidebar-hover: rgba(0, 0, 0, 0.06);
+  --color-sidebar-active-bg: #e8f1f8;
+  --color-sidebar-active-text: #2d6da5;
+}
+
+/* ---------- Dark theme ---------- */
+[data-theme="dark"] {
+  /* Backgrounds */
+  --color-bg-primary: #161b22;
+  --color-bg-secondary: #0d1117;
+  --color-bg-tertiary: #010409;
+
+  /* Text */
+  --color-text-primary: #e0e8f0;
+  --color-text-secondary: #8b95a5;
+  --color-text-tertiary: #5a6371;
+
+  /* Borders */
+  --color-border-primary: rgba(255, 255, 255, 0.15);
+  --color-border-secondary: rgba(255, 255, 255, 0.08);
+
+  /* Brand / Accent */
+  --color-accent: #4a9ede;
+  --color-accent-hover: #3a8bcc;
+  --color-accent-light: #15253a;
+  --color-accent-text: #4a9ede;
+
+  /* Semantic */
+  --color-success: #2ecc71;
+  --color-success-light: #0f2b1a;
+  --color-warning: #e8a838;
+  --color-warning-light: #2a1f0a;
+  --color-danger: #e85555;
+  --color-danger-light: #2b0f0f;
+  --color-info: #4a9ede;
+  --color-info-light: #15253a;
+
+  /* Sidebar */
+  --color-sidebar-bg: #0d1117;
+  --color-sidebar-hover: rgba(255, 255, 255, 0.06);
+  --color-sidebar-active-bg: #15253a;
+  --color-sidebar-active-text: #4a9ede;
+}
+
+/* ---------- Shared tokens (same in both themes) ---------- */
+:root {
+  /* Typography */
+  --font-primary: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+
+  --font-size-xs: 0.6875rem; /* 11px */
+  --font-size-sm: 0.8125rem; /* 13px */
+  --font-size-base: 0.875rem; /* 14px */
+  --font-size-md: 1rem; /* 16px */
+  --font-size-lg: 1.25rem; /* 20px */
+  --font-size-xl: 1.5rem; /* 24px */
+  --font-size-2xl: 2rem; /* 32px */
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+
+  /* Spacing */
+  --space-xs: 0.25rem; /* 4px */
+  --space-sm: 0.5rem; /* 8px */
+  --space-md: 0.75rem; /* 12px */
+  --space-lg: 1rem; /* 16px */
+  --space-xl: 1.5rem; /* 24px */
+  --space-2xl: 2rem; /* 32px */
+
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  /* Layout */
+  --sidebar-width: 220px;
+  --sidebar-collapsed-width: 56px;
+  --topbar-height: 52px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
+
+  /* Breakpoints (for reference — used in media queries) */
+  /* Mobile: 0 - 768px */
+  /* Tablet: 769px - 1024px */
+  /* Desktop: 1025px+ */
+}

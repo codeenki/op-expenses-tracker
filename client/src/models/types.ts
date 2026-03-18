@@ -13,20 +13,51 @@ export interface User {
   primaryCurrency: string;
 }
 
+/* ---------- Accounts ---------- */
+
 export interface Account {
   id: string;
   name: string;
-  type: AccountType;
-  balance: number; // in cents
+  bankInstitution: string;
+  country: string;
   currency: string;
+  type: AccountType;
+  initialBalance: number; // in cents
+  balance: number; // in cents, calculated
+  interestRate?: number; // annual percentage, optional
+  tags: string[];
+  visibility: Visibility;
+  status: EntityStatus;
 }
 
-export type AccountType =
-  | "checking"
-  | "savings"
-  | "credit_card"
-  | "debit_card"
-  | "cash";
+export type AccountType = "checking" | "savings" | "investment" | "enterprise";
+
+export type Visibility = "private" | "shared" | "public";
+
+export type EntityStatus = "active" | "inactive" | "closed";
+
+/* ---------- Cards ---------- */
+
+export interface Card {
+  id: string;
+  name: string;
+  type: CardType;
+  network: CardNetwork;
+  bank: string;
+  lastFourDigits: string;
+  associatedAccountId?: string;
+  status: EntityStatus;
+  creditLimit?: number; // in cents, credit cards only
+  currentBalance: number; // in cents, negative = debt
+  statementClosingDate?: string; // day of month as ISO string
+  paymentDueDate?: string; // day of month as ISO string
+}
+
+export type CardType = "credit" | "debit";
+
+export type CardNetwork = "visa" | "mastercard" | "amex" | "other";
+
+/* ---------- Expenses ---------- */
 
 export interface Expense {
   id: string;
@@ -35,6 +66,7 @@ export interface Expense {
   category: ExpenseCategory;
   date: string; // ISO string
   accountId?: string; // null = global expense
+  cardId?: string; // if paid with a card
   notes?: string;
 }
 
@@ -48,6 +80,8 @@ export type ExpenseCategory =
   | "education"
   | "other";
 
+/* ---------- Recurring Payments ---------- */
+
 export interface RecurringPayment {
   id: string;
   name: string;
@@ -57,6 +91,8 @@ export interface RecurringPayment {
   category: ExpenseCategory;
   accountId?: string;
 }
+
+/* ---------- Analytics ---------- */
 
 export interface CategorySummary {
   category: ExpenseCategory;

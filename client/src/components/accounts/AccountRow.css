@@ -1,0 +1,212 @@
+/* ============================================
+   ACCOUNT ROW STYLES
+   ============================================ */
+
+.accountRow {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-md);
+  overflow: hidden;
+}
+
+.accountRow-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.accountRow-header:hover {
+  background: var(--color-bg-secondary);
+}
+
+.accountRow-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  min-width: 0;
+}
+
+.accountRow-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+.accountRow-name {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.accountRow-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  margin-top: 2px;
+  flex-wrap: wrap;
+}
+
+.accountRow-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.accountRow-statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+}
+
+.accountRow-statusDot.active {
+  background: var(--color-success);
+}
+.accountRow-statusDot.inactive {
+  background: var(--color-warning);
+}
+.accountRow-statusDot.closed {
+  background: var(--color-text-tertiary);
+}
+
+.accountRow-separator {
+  color: var(--color-text-tertiary);
+}
+
+.accountRow-tag {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-accent-light);
+  color: var(--color-accent-text);
+}
+
+.accountRow-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex-shrink: 0;
+}
+
+.accountRow-balance {
+  text-align: right;
+}
+
+.accountRow-balanceVal {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.accountRow-balanceLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.accountRow-chevron {
+  color: var(--color-text-tertiary);
+  transition: transform var(--transition-normal);
+  display: flex;
+}
+
+.accountRow-chevron.open {
+  transform: rotate(180deg);
+}
+
+/* ---------- Expanded details ---------- */
+
+.accountRow-details {
+  padding: 0 var(--space-lg) var(--space-lg);
+  border-top: 1px solid var(--color-border-secondary);
+}
+
+.accountRow-detailsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+  padding-top: var(--space-lg);
+}
+
+.accountRow-detailLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.accountRow-detailValue {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  margin-top: 2px;
+}
+
+.accountRow-actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border-secondary);
+}
+
+.accountRow-btn {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-xs);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid var(--color-border-secondary);
+  background: transparent;
+  color: var(--color-text-secondary);
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.accountRow-btn:hover {
+  border-color: var(--color-border-primary);
+  color: var(--color-text-primary);
+}
+
+.accountRow-btn.danger {
+  color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+.accountRow-btn.danger:hover {
+  background: var(--color-danger-light);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 768px) {
+  .accountRow-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .accountRow-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .accountRow-balance {
+    text-align: left;
+  }
+
+  .accountRow-detailsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .accountRow-actions {
+    flex-wrap: wrap;
+  }
+}

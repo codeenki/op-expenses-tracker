@@ -3,6 +3,7 @@ import { ROUTES } from "./constants/routes";
 import Layout from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import PlaceholderPage from "./pages/PlaceholderPage";
+import AccountsPage from "./pages/AccountsPage";
 
 export default function App() {
   return (
@@ -10,10 +11,7 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
-          <Route
-            path={ROUTES.ACCOUNTS}
-            element={<PlaceholderPage title="Accounts & Cards" />}
-          />
+          <Route path={ROUTES.ACCOUNTS} element={<AccountsPage />} />
           <Route
             path={ROUTES.EXPENSES}
             element={<PlaceholderPage title="Expenses" />}

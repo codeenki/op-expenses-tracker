@@ -16,6 +16,7 @@ interface CardRowProps {
   accounts: Account[];
   onEdit: (id: string) => void;
   onDeactivate: (id: string) => void;
+  onViewTransactions?: (id: string) => void;
 }
 
 export default function CardRow({
@@ -23,6 +24,7 @@ export default function CardRow({
   accounts,
   onEdit,
   onDeactivate,
+  onViewTransactions,
 }: CardRowProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -173,9 +175,14 @@ export default function CardRow({
             <button className="cardRow-btn" onClick={() => onEdit(card.id)}>
               Edit
             </button>
-            <button className="cardRow-btn" onClick={() => onEdit(card.id)}>
-              View expenses
-            </button>
+            {onViewTransactions && (
+              <button
+                className="cardRow-btn"
+                onClick={() => onViewTransactions(card.id)}
+              >
+                View expenses
+              </button>
+            )}
             <button
               className="cardRow-btn danger"
               onClick={() => onDeactivate(card.id)}

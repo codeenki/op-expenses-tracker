@@ -7,6 +7,8 @@
 import {
   type TransactionType,
   type TransactionCategory,
+  type Account,
+  type Card,
 } from "../../models/types";
 import {
   CATEGORY_CONFIG,
@@ -26,6 +28,8 @@ export interface FilterState {
 interface TransactionFiltersProps {
   filters: FilterState;
   onFilterChange: (filters: FilterState) => void;
+  accounts: Account[];
+  cards: Card[];
 }
 
 const DATE_RANGES = [
@@ -40,6 +44,8 @@ const ALL_CATEGORIES = [...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES];
 export default function TransactionFilters({
   filters,
   onFilterChange,
+  accounts,
+  cards,
 }: TransactionFiltersProps) {
   function updateFilter(key: keyof FilterState, value: string) {
     onFilterChange({ ...filters, [key]: value });
@@ -96,6 +102,32 @@ export default function TransactionFilters({
           <option value="expense">Expense</option>
           <option value="income">Income</option>
           <option value="transfer">Transfer</option>
+        </select>
+
+        <select
+          className="txFilters-select"
+          value={filters.source}
+          onChange={(e) => updateFilter("source", e.target.value)}
+        >
+          <option value="">Source</option>
+          {accounts
+            .filter((a) => a.status === "active")
+            .map((a) => (
+              <option
+                key={`account-${a.id}`}
+                value={a.type === "cash" ? `cash-${a.id}` : `account-${a.id}`}
+              >
+                {a.name}
+                {a.type === "cash" ? " (Cash)" : ""}
+              </option>
+            ))}
+          {cards
+            .filter((c) => c.status === "active")
+            .map((c) => (
+              <option key={`card-${c.id}`} value={`card-${c.id}`}>
+                {c.name} (••{c.lastFourDigits})
+              </option>
+            ))}
         </select>
 
         {hasActiveFilters && (

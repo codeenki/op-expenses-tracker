@@ -15,12 +15,14 @@ interface AccountRowProps {
   account: Account;
   onEdit: (id: string) => void;
   onDeactivate: (id: string) => void;
+  onViewTransactions?: (id: string) => void;
 }
 
 export default function AccountRow({
   account,
   onEdit,
   onDeactivate,
+  onViewTransactions,
 }: AccountRowProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -148,12 +150,14 @@ export default function AccountRow({
             >
               Edit
             </button>
-            <button
-              className="accountRow-btn"
-              onClick={() => onEdit(account.id)}
-            >
-              View transactions
-            </button>
+            {onViewTransactions && (
+              <button
+                className="accountRow-btn"
+                onClick={() => onViewTransactions(account.id)}
+              >
+                View transactions
+              </button>
+            )}
             <button
               className="accountRow-btn danger"
               onClick={() => onDeactivate(account.id)}

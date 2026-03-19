@@ -5,6 +5,8 @@
    with appropriate stats calculation.
    ============================================ */
 
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../constants/routes";
 import { useState } from "react";
 import { type Account, type Card } from "../models/types";
 import { formatCurrency, getDaysUntil } from "../utils/formatters";
@@ -137,7 +139,7 @@ export default function AccountsPage() {
   const [editingCard, setEditingCard] = useState<Card | null>(null);
 
   /* ---------- Account calculations ---------- */
-
+  const navigate = useNavigate();
   const activeAccounts = accounts.filter((a) => a.status === "active");
   const bankAccounts = activeAccounts.filter((a) => a.type !== "cash");
   const cashAccounts = activeAccounts.filter((a) => a.type === "cash");
@@ -251,6 +253,18 @@ export default function AccountsPage() {
       setEditingAccount(account);
       setIsEditAccountOpen(true);
     }
+  }
+
+  function handleViewAccountTransaction(id: string) {
+    navigate(`${ROUTES.TRANSACTIONS}?source=account-${id}`);
+  }
+
+  function handleViewCardTransaction(id: string) {
+    navigate(`${ROUTES.TRANSACTIONS}?source=card-${id}`);
+  }
+
+  function handleViewCashTransaction(id: string) {
+    navigate(`${ROUTES.TRANSACTIONS}?source=cash-${id}`);
   }
 
   function handleSaveAccount(updated: Account) {
@@ -368,6 +382,7 @@ export default function AccountsPage() {
                         account={account}
                         onEdit={handleEditAccount}
                         onDeactivate={handleDeactivateAccount}
+                        onViewTransactions={handleViewAccountTransaction}
                       />
                     ))}
                 </div>
@@ -385,6 +400,7 @@ export default function AccountsPage() {
                         account={account}
                         onEdit={handleEditAccount}
                         onDeactivate={handleDeactivateAccount}
+                        onViewTransactions={handleViewCashTransaction}
                       />
                     ))}
                 </div>
@@ -434,6 +450,7 @@ export default function AccountsPage() {
                 accounts={accounts}
                 onEdit={handleEditCard}
                 onDeactivate={handleDeactivateCard}
+                onViewTransactions={handleViewCardTransaction}
               />
             ))
           )}

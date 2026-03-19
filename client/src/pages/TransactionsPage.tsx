@@ -4,6 +4,7 @@
    filters, list, detail modal, and add modals.
    ============================================ */
 
+import { useSearchParams } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { type Transaction, type Account, type Card } from "../models/types";
 import { formatCurrency } from "../utils/formatters";
@@ -23,6 +24,23 @@ import QuickAddModal, {
 import "./TransactionsPage.css";
 import EditTransactionModal from "../components/transactions/EditTransactionModal";
 /* ---------- Mock Data ---------- */
+const MOCK_CASH_ACCOUNTS: Account[] = [
+  {
+    id: "cash-1",
+    name: "Wallet",
+    bankInstitution: "",
+    country: "",
+    currency: "USD",
+    type: "cash",
+    initialBalance: 34000,
+    balance: 34000,
+    tags: [],
+    visibility: "private",
+    status: "active",
+    location: "Wallet",
+    includeInGlobalBalance: true,
+  },
+];
 
 const MOCK_ACCOUNTS: Account[] = [
   {
@@ -252,13 +270,6 @@ const MOCK_TRANSACTIONS: Transaction[] = [
 export default function TransactionsPage() {
   const [transactions, setTransactions] =
     useState<Transaction[]>(MOCK_TRANSACTIONS);
-  const [filters, setFilters] = useState<FilterState>({
-    search: "",
-    dateRange: "",
-    category: "",
-    source: "",
-    type: "",
-  });
   const [selectedMonth, setSelectedMonth] = useState("2026-03");
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
@@ -268,6 +279,18 @@ export default function TransactionsPage() {
     useState<Transaction | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  const [filters, setFilters] = useState<FilterState>(() => {
+    const sourceFromUrl = searchParams.get("source") || "";
+    return {
+      search: "",
+      dateRange: "",
+      category: "",
+      source: sourceFromUrl,
+      type: "",
+    };
+  });
 
   /* ---------- Filtering ---------- */
 
@@ -308,6 +331,22 @@ export default function TransactionsPage() {
 
     if (filters.type) {
       result = result.filter((t) => t.type === filters.type);
+    }
+
+    if (filters.source) {
+      result = result.filter((t) => {
+        const sourceKey =
+          t.sourceType === "cash"
+            ? `cash-${t.sourceId || "any"}`
+            : t.sourceType === "credit_card"
+              ? `card-${t.sourceId}`
+              : `account-${t.sourceId}`;
+
+        if (filters.source === "cash") {
+          return t.sourceType === "cash";
+        }
+        return sourceKey === filters.source;
+      });
     }
 
     return result;
@@ -488,7 +527,12 @@ export default function TransactionsPage() {
         availableMonths={availableMonths}
       />
 
-      <TransactionFilters filters={filters} onFilterChange={setFilters} />
+      <TransactionFilters
+        filters={filters}
+        onFilterChange={setFilters}
+        accounts={[...MOCK_ACCOUNTS, ...MOCK_CASH_ACCOUNTS]}
+        cards={MOCK_CARDS}
+      />
 
       <TransactionList
         transactions={filteredTransactions}

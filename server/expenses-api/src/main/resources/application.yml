@@ -1,0 +1,39 @@
+# ============================================
+# APPLICATION CONFIGURATION
+# Database credentials and JWT secret come from
+# environment variables — never hardcode secrets.
+# ============================================
+
+spring:
+  application:
+    name: expenses-api
+
+  # ---------- Database ----------
+  datasource:
+    url: jdbc:postgresql://localhost:5432/expenses_tracker
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:pwtpsql1234}
+    driver-class-name: org.postgresql.Driver
+
+  # ---------- JPA / Hibernate ----------
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+# ---------- Server ----------
+server:
+  port: 8080
+
+# ---------- Custom App Properties ----------
+app:
+  jwt:
+    secret: ${JWT_SECRET:this-is-a-dev-secret-change-in-production-must-be-at-least-256-bits-long}
+    access-token-expiration: 900000 # 15 minutes in milliseconds
+    refresh-token-expiration: 604800000 # 7 days in milliseconds
+  cors:
+    allowed-origins: http://localhost:5173 # Vite dev server

@@ -10,7 +10,7 @@ spring:
 
   # ---------- Database ----------
   datasource:
-    url: jdbc:postgresql://localhost:5432/expenses_tracker
+    url: jdbc:postgresql://localhost:5432/op_expensestracker
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:pwtpsql1234}
     driver-class-name: org.postgresql.Driver
